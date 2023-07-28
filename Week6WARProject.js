@@ -17,81 +17,117 @@ class Deck { // Creating a class for the deck
         this.suits = ['♠', '♥', '♣', '♦'];
         this.values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace"];
 
-        for (let suit of this.suits) {
-            for (let value of this.values) {
-                this.deck.push(new Card(suit, value));
-            }
-        }
-    }
 
-    shuffle() { // Creating a method to shuffle the deck
-        for (let i = this.deck.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i+1));
-            [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
-         }
-        }
-
-    dealCard(){  // Creating a method to deal a card
-      return this.deck.pop()
-      }
-}
+        //*
+       // for (let suit of this.suits) {
+       //     for (let value of this.values) {
+      //          this.deck.push(new Card(suit, value));
+       //     }
+          } 
     
-class Player { // Creating a class for a player
-    constructor(name) {
-        this.name = name;
-        this.hand = [];
-        this.score = 0;
-    }
-    playCard() { // A method to play a card from the player
-        return this.hand.pop();
-    }
-}
 
-function startGame() { // A function to start the game, create the deck, and deal
-    const deck = new Deck();
-    const playerOne = new Player('Player 1');
-    const playerTwo = new Player('Player 2');
+    createDeck() {
+        for(let i = 0; i < this.suits.length; i++) {
+            for(let j = 0; j < this.values.length; j++) {
+                let card = {
+                    name: `${this.values[j]} of ${this.suits[i]}`,
+                    value: j + 1
+            }
+                this.deck.push(card);
 
-    deck.shuffle(); // Shuffles the deck and deals 26 cards each
-        for (let i = 0; i < 26; i++) {
-            playerOne.hand.push(deck.dealCard());
-            playerTwo.hand.push(deck.dealCard());
-        }
-        return {playerOne, playerTwo};
 
-}
-
-// Function to play a round of WAR
-function playRound(playerOne, playerTwo) {
-    const card1 = playerOne.playCard();
-    const card2 = playerTwo.playCard();
-        if (getCardValue(card1) > getCardValue(card2)) { // Determines the winner based on card value
-            playerOne.score++;
-        } else if (getCardValue(card1) < getCardValue(card2)) {
-            playerTwo.score++;
             }
         }
-
-       function getCardValue(card) { // Function to get the numeric value of a card
-            return card.values.indexOf(card.value);
-        }
-
-function playWar() { // Function to play the game of WAR
-    const { playerOne, playerTwo } = startGame();
-playerOne.score = 0;
-playerTwo.score = 0;
-    for (let i =0; i < 26; i++) { // Plays 26 rounds of the game
-        playRound(playerOne, playerTwo);
     }
-    console.log(`${playerOne.name}'s score: ${playerOne.score}`);
-    console.log(`${playerTwo.name}'s score: ${playerTwo.score}`);
-        if (playerOne.score > playerTwo.score) {
-            console.log(`${playerOne.name} wins!!!`);
-        } else if (playerOne.score < playerTwo.score) {
-            console.log(`${player2.name} wins!!!`);
+    shuffleDeck() {
+        for (let i = this.deck.length - 1; i > 0; i--)  {
+         let j = Math.floor(Math.random() * (i + 1));
+     
+            [this.deck[i], this.deck[j]] = [this.deck[j], this.deck[i]];
+        }
+     }
+}
+
+const deck = new Deck
+deck.createDeck()
+deck.shuffleDeck()
+
+console.log(deck.deck);
+
+class Game {
+    constructor() {
+        this.player1 =  {
+            name: 'Player 1',
+            score: 0,
+            hand: []
+        }
+        this.player2 =  {
+            name: 'Player 2',
+            score: 0,
+            hand: []
+        }
+    }
+    playGame() { 
+        const deck = new Deck;
+        deck.createDeck();
+        deck.shuffleDeck();
+
+        while(deck.deck.length !== 0) {
+            this.player1.hand.push(deck.deck.shift());
+            this.player2.hand.push(deck.deck.shift());
+        }
+        console.log(this.player1.hand)
+        console.log(this.player2.hand)
+        for (let i = 0; i< this.player1.hand.length; i++) {
+
+            if (this.player1.hand[i].value > this.player2.hand[i].value) {
+                this.player1.score ++
+                console.log(`
+                P1 Card: ${this.player1.hand[i].name}
+                P2 Card: ${this.player2.hand[i].name}
+                Player 1 scores!
+                Current Score: P1: ${this.player1.score} - P2: ${this.player2.score}
+                 `)
+            } else if (this.player2.hand[i].value > this.player1.hand[i].value) {
+                this.player2.score ++ 
+                console.log( `
+                    P1 Card: ${this.player1.hand[i].name}
+                    P2 Card: ${this.player2.hand[i].name}
+                    Player 2 scores!
+                    Current Score: P1: ${this.player1.score} - P2: ${this.player2.score}`);
+            } else {
+                console.log(`
+                P1 Card: ${this.player1.hand[i].name}
+                P2 Card: ${this.player2.hand[i].name}
+                Tie Round!
+                Current Score: P1: ${this.player1.score} - P2: ${this.player2.score}`);
+            }
+        }
+        if (this.player1.score > this.player2.score) {
+            console.log(`Player 1 wins the game! 
+            Final:  P1:  ${this.player1.score}
+                    P2:  ${this.player2.score}
+            `)
+        } else if (this.player2.score > this.player1.score) {
+            console.log(`Player 2 wins the game!
+            Final:  P1:  ${this.player1.score}
+                    P2:  ${this.player2.score}
+            `);
         } else {
-            console.log('Tie Game!');
-             }
+            console.log('Tie Game');
         }
 
-    startGame();
+    }
+
+ }
+
+    const game = new Game;
+    game.playGame();
+
+
+
+
+
+
+
+
